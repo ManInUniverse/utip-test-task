@@ -67,6 +67,7 @@ export const NewCharacterForm = ({ onSubmit }: Props) => {
                     id="name"
                     placeholder="Enter name"
                     minLength={2}
+                    maxLength={18}
                     required
                 />
             </div>
@@ -82,6 +83,7 @@ export const NewCharacterForm = ({ onSubmit }: Props) => {
                     name="height"
                     id="height"
                     placeholder="Enter height in centimeters"
+                    maxLength={4}
                     required
                 />
             </div>
@@ -97,6 +99,7 @@ export const NewCharacterForm = ({ onSubmit }: Props) => {
                     name="mass"
                     id="mass"
                     placeholder="Enter weight in kilograms"
+                    maxLength={4}
                     required
                 />
             </div>

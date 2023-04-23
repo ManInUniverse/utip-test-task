@@ -45,7 +45,6 @@ export const MainPage = observer(() => {
     return (
         <section className="grid grid-cols-2 py-8">
             <h1 className="sr-only">Utip Test Task. Star Wars Characters</h1>
-
             <div className="mr-[20px] flex flex-col items-center justify-self-center">
                 <img src={logo} alt="Star Wars Logo" />
                 <p className="mt-10 w-[400px] text-center">
@@ -53,7 +52,6 @@ export const MainPage = observer(() => {
                     universe, click on the button below.
                 </p>
                 <p className="mt-5 w-[250px] text-center">And may the force be with you...</p>
-
                 <div className="mt-7">
                     <Button
                         type="button"
@@ -66,7 +64,6 @@ export const MainPage = observer(() => {
                     </Button>
                 </div>
             </div>
-
             <div>
                 <div className="relative overflow-x-auto rounded-lg">
                     <CharactersTable
@@ -76,7 +73,6 @@ export const MainPage = observer(() => {
                         onAction={handleActionButtonClick}
                     />
                 </div>
-
                 <div className="mt-4 flex items-center justify-end gap-5">
                     <Button
                         type="button"
@@ -85,7 +81,6 @@ export const MainPage = observer(() => {
                     >
                         Add new character
                     </Button>
-
                     {!!characters.length && (
                         <Button type="button" color="red" onClick={() => setModal('removeData')}>
                             Remove data
@@ -93,7 +88,6 @@ export const MainPage = observer(() => {
                     )}
                 </div>
             </div>
-
             <Modal isOpen={modal === 'removeData'}>
                 <div className="flex flex-col items-center">
                     <AlertIcon width={60} height={60} className="mb-5 text-gray-200" />

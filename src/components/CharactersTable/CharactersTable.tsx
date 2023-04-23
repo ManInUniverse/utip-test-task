@@ -1,4 +1,5 @@
 import { Character } from '../../types/character';
+
 import { Spinner } from '../Spinner/Spinner';
 
 type Props = {

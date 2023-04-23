@@ -7,7 +7,6 @@ export const NotFoundPage = () => {
         <div className="flex min-h-screen flex-col bg-black text-white">
             <div className="mx-auto flex w-[1200px] flex-grow flex-col items-center justify-center gap-20 p-6">
                 <h1 className="text-3xl text-white">404. Page not found</h1>
-
                 <Link
                     to={AppRoute.Main}
                     className="flex items-center gap-5 rounded-lg border border-yellow-300 px-3 py-2 text-yellow-300 transition hover:bg-yellow-400 hover:text-white"

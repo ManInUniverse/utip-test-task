@@ -1,9 +1,11 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { MainPage } from './pages/MainPage/MainPage';
-import { NotFoundPage } from './pages/NotFoundPage/NotFoundPage';
-import { Layout } from './components/Layout/Layout';
-import { AddNewCharacterPage } from './pages/AddNewCharacterPage/AddNewCharacterPage';
+
 import { AppRoute } from './const';
+
+import { Layout } from './components/Layout/Layout';
+import { MainPage } from './pages/MainPage/MainPage';
+import { AddNewCharacterPage } from './pages/AddNewCharacterPage/AddNewCharacterPage';
+import { NotFoundPage } from './pages/NotFoundPage/NotFoundPage';
 
 export const App = () => {
     return (
@@ -11,10 +13,8 @@ export const App = () => {
             <Routes>
                 <Route path={AppRoute.Main} element={<Layout />}>
                     <Route index element={<MainPage />} />
-
                     <Route path={AppRoute.AddNewCharacter} element={<AddNewCharacterPage />} />
                 </Route>
-
                 <Route path="*" element={<NotFoundPage />} />
             </Routes>
         </BrowserRouter>
