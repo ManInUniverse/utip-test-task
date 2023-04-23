@@ -1,14 +1,17 @@
-import logo from '../../assets/logo.png';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
+
 import { charactersStore } from '../../store/charactersStore';
+import { AppRoute } from '../../const';
+import { Character } from '../../types/character';
+
+import logo from '../../assets/logo.png';
+import { ReactComponent as AlertIcon } from '../../assets/alertIcon.svg';
+
 import { CharactersTable } from '../../components/CharactersTable/CharactersTable';
 import { Modal } from '../../components/Modal/Modal';
 import { Button } from '../../components/Button/Button';
-import { useState } from 'react';
-import { ReactComponent as AlertIcon } from '../../assets/alertIcon.svg';
-import { useNavigate } from 'react-router-dom';
-import { AppRoute } from '../../const';
-import { Character } from '../../types/character';
 
 export const MainPage = observer(() => {
     const navigate = useNavigate();

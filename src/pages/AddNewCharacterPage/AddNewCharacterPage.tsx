@@ -1,13 +1,16 @@
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { NewCharacterForm } from '../../components/NewCharacterForm/NewCharacterForm';
+
 import { Character } from '../../types/character';
 import { AppRoute } from '../../const';
 import { charactersStore } from '../../store/charactersStore';
-import { Modal } from '../../components/Modal/Modal';
-import { useState } from 'react';
+
 import { ReactComponent as SuccessIcon } from '../../assets/successIcon.svg';
 import { ReactComponent as AlertIcon } from '../../assets/alertIcon.svg';
+
+import { NewCharacterForm } from '../../components/NewCharacterForm/NewCharacterForm';
 import { Button } from '../../components/Button/Button';
+import { Modal } from '../../components/Modal/Modal';
 
 export const AddNewCharacterPage = () => {
     const navigate = useNavigate();

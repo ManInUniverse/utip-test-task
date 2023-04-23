@@ -1,6 +1,8 @@
 import { ChangeEvent, FormEvent, useState } from 'react';
+
 import { Character } from '../../types/character';
 import { genderOptions, hairColorOptions } from './NewCharacterForm.const';
+
 import { Button } from '../Button/Button';
 
 type Props = {
@@ -20,8 +22,8 @@ export const NewCharacterForm = ({ onSubmit }: Props) => {
         name: '',
         height: '',
         mass: '',
-        hairColor: '',
-        gender: '',
+        hairColor: hairColorOptions[0].value,
+        gender: genderOptions[0].value,
     });
 
     const isFormValid = validateForm(formData);
@@ -44,7 +46,10 @@ export const NewCharacterForm = ({ onSubmit }: Props) => {
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        onSubmit(formData);
+        onSubmit({
+            ...formData,
+            name: formData.name.trim(),
+        });
     };
 
     return (

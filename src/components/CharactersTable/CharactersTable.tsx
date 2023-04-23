@@ -12,7 +12,7 @@ export const CharactersTable = ({ characters, isLoading, error, onAction }: Prop
     return (
         <table className="w-full text-left text-sm text-gray-400">
             <thead className="bg-gray-700 text-xs uppercase text-gray-400">
-                <tr>
+                <tr className="text-center">
                     <th scope="col" className="whitespace-nowrap px-3 py-3">
                         Name
                     </th>
@@ -33,7 +33,6 @@ export const CharactersTable = ({ characters, isLoading, error, onAction }: Prop
                     </th>
                 </tr>
             </thead>
-
             <tbody>
                 {characters.length ? (
                     characters.map((character) => (
@@ -69,13 +68,11 @@ export const CharactersTable = ({ characters, isLoading, error, onAction }: Prop
                                 <Spinner size={50} />
                             </td>
                         )}
-
                         {error && (
                             <td colSpan={6} className="px-10 py-20 text-center text-red-600">
                                 Failed to load data
                             </td>
                         )}
-
                         {!isLoading && !error && (
                             <td colSpan={6} className="px-10 py-20 text-center">
                                 There is no data

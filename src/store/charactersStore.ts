@@ -1,4 +1,6 @@
 import { makeAutoObservable, action } from 'mobx';
+import { makePersistable } from 'mobx-persist-store';
+
 import { Character } from '../types/character';
 import { fetchCharacters } from '../services/api';
 
@@ -9,6 +11,11 @@ class CharactersStore {
 
     constructor() {
         makeAutoObservable(this);
+        makePersistable(this, {
+            name: 'CharactersStore',
+            properties: ['characters'],
+            storage: window.localStorage,
+        });
     }
 
     load() {
