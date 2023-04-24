@@ -18,7 +18,7 @@ export const MainPage = observer(() => {
     const [targetCharacter, setTargetCharacter] = useState<Character | null>(null);
     const [modal, setModal] = useState<'removeData' | 'deleteCharacter' | null>(null);
 
-    const { characters, isLoading, error } = charactersStore;
+    const { sortedCharacters, isLoading, error } = charactersStore;
 
     const handleModalClose = () => {
         setTargetCharacter(null);
@@ -40,6 +40,10 @@ export const MainPage = observer(() => {
             charactersStore.delete(targetCharacter);
         }
         handleModalClose();
+    };
+
+    const handleSortingChange = (field: keyof Character) => {
+        charactersStore.setSortingConfig(field);
     };
 
     return (
@@ -67,10 +71,11 @@ export const MainPage = observer(() => {
             <div>
                 <div className="relative overflow-x-auto rounded-lg">
                     <CharactersTable
-                        characters={characters}
+                        characters={sortedCharacters}
                         isLoading={isLoading}
                         error={error}
                         onAction={handleActionButtonClick}
+                        onSort={handleSortingChange}
                     />
                 </div>
                 <div className="mt-4 flex items-center justify-end gap-5">
@@ -81,7 +86,7 @@ export const MainPage = observer(() => {
                     >
                         Add new character
                     </Button>
-                    {!!characters.length && (
+                    {!!sortedCharacters.length && (
                         <Button type="button" color="red" onClick={() => setModal('removeData')}>
                             Remove data
                         </Button>

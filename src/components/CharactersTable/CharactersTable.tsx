@@ -1,5 +1,9 @@
 import { Character } from '../../types/character';
 
+import { tableHeaders } from './CharactersTable.const';
+
+import { ReactComponent as SortingIcon } from '../../assets/sortingIcon.svg';
+
 import { Spinner } from '../Spinner/Spinner';
 
 type Props = {
@@ -7,28 +11,30 @@ type Props = {
     isLoading?: boolean;
     error?: string | null;
     onAction: (character: Character) => void;
+    onSort: (field: keyof Character) => void;
 };
 
-export const CharactersTable = ({ characters, isLoading, error, onAction }: Props) => {
+export const CharactersTable = ({ characters, isLoading, error, onAction, onSort }: Props) => {
     return (
         <table className="w-full text-left text-sm text-gray-400">
             <thead className="bg-gray-700 text-xs uppercase text-gray-400">
                 <tr className="text-center">
-                    <th scope="col" className="whitespace-nowrap px-3 py-3">
-                        Name
-                    </th>
-                    <th scope="col" className="whitespace-nowrap px-3 py-3">
-                        Height
-                    </th>
-                    <th scope="col" className="whitespace-nowrap px-3 py-3">
-                        Mass
-                    </th>
-                    <th scope="col" className="whitespace-nowrap px-3 py-3">
-                        Hair color
-                    </th>
-                    <th scope="col" className="whitespace-nowrap px-3 py-3">
-                        Gender
-                    </th>
+                    {tableHeaders.map(({ label, field }) => (
+                        <th key={field} scope="col" className="whitespace-nowrap px-3 py-3">
+                            <div className="flex items-center">
+                                {label}
+                                {!!characters.length && (
+                                    <button
+                                        type="button"
+                                        className="ml-1 p-1"
+                                        onClick={() => onSort(field)}
+                                    >
+                                        <SortingIcon width={10} height={10} />
+                                    </button>
+                                )}
+                            </div>
+                        </th>
+                    ))}
                     <th scope="col" className="whitespace-nowrap px-3 py-3">
                         Action
                     </th>
@@ -65,17 +71,26 @@ export const CharactersTable = ({ characters, isLoading, error, onAction }: Prop
                 ) : (
                     <tr className="bg-gray-800">
                         {isLoading && (
-                            <td colSpan={6} className="px-10 py-20 text-center">
+                            <td
+                                colSpan={tableHeaders.length + 1}
+                                className="px-10 py-20 text-center"
+                            >
                                 <Spinner size={50} />
                             </td>
                         )}
                         {error && (
-                            <td colSpan={6} className="px-10 py-20 text-center text-red-600">
+                            <td
+                                colSpan={tableHeaders.length + 1}
+                                className="px-10 py-20 text-center text-red-600"
+                            >
                                 Failed to load data
                             </td>
                         )}
                         {!isLoading && !error && (
-                            <td colSpan={6} className="px-10 py-20 text-center">
+                            <td
+                                colSpan={tableHeaders.length + 1}
+                                className="px-10 py-20 text-center"
+                            >
                                 There is no data
                             </td>
                         )}

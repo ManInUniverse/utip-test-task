@@ -4,22 +4,29 @@ import { makePersistable } from 'mobx-persist-store';
 import { Character } from '../types/character';
 import { fetchCharacters } from '../services/api';
 
+export type SortingConfig = {
+    field: keyof Character;
+    direction: 'ascending' | 'descending';
+};
+
 class CharactersStore {
     characters: Character[] = [];
     isLoading = false;
     error: string | null = null;
+    sortingConfig: SortingConfig | null = null;
 
     constructor() {
         makeAutoObservable(this);
         makePersistable(this, {
             name: 'CharactersStore',
-            properties: ['characters'],
+            properties: ['characters', 'sortingConfig'],
             storage: window.localStorage,
         });
     }
 
     load() {
         this.clear();
+        this.sortingConfig = null;
         this.isLoading = true;
         this.error = null;
         fetchCharacters()
@@ -57,6 +64,37 @@ class CharactersStore {
             const targetCharacterIndex = this.characters.indexOf(targetCharacter);
             this.characters.splice(targetCharacterIndex, 1);
         }
+    }
+
+    setSortingConfig(field: keyof Character) {
+        const sortingConfig = this.sortingConfig;
+        let direction: SortingConfig['direction'] = 'ascending';
+
+        if (
+            sortingConfig &&
+            sortingConfig.field === field &&
+            sortingConfig.direction === 'ascending'
+        ) {
+            direction = 'descending';
+        }
+        this.sortingConfig = { field, direction };
+    }
+
+    get sortedCharacters() {
+        const sortingConfig = this.sortingConfig;
+
+        if (sortingConfig) {
+            return [...this.characters].sort((a, b) => {
+                if (a[sortingConfig.field] < b[sortingConfig.field]) {
+                    return sortingConfig.direction === 'ascending' ? -1 : 1;
+                }
+                if (a[sortingConfig.field] > b[sortingConfig.field]) {
+                    return sortingConfig.direction === 'ascending' ? 1 : -1;
+                }
+                return 0;
+            });
+        }
+        return this.characters;
     }
 }
 
