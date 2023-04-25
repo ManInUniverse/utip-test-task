@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, DragEvent } from 'react';
 
 import { Character } from '../../types/character';
 import { tableHeaders } from './CharactersTable.const';
@@ -7,6 +7,7 @@ import { ReactComponent as SortingIcon } from '../../assets/sortingIcon.svg';
 
 import { Spinner } from '../Spinner/Spinner';
 import { Pagination } from '../Pagination/Pagination';
+import { charactersStore } from '../../store/charactersStore';
 
 type Props = {
     characters: Character[];
@@ -37,6 +38,28 @@ export const CharactersTable = ({ characters, isLoading, error, onAction, onSort
 
     const handlePageChange = (pageNumber: number) => {
         setCurrentPage(pageNumber);
+    };
+
+    const [draggableCharacter, setDraggableCharacter] = useState<Character | null>(null);
+
+    const handleDragStart = (e: DragEvent<HTMLTableRowElement>, character: Character) => {
+        e.dataTransfer.setData('text/plain', '');
+        setDraggableCharacter(character);
+    };
+
+    const handleDragLeave = (e: DragEvent<HTMLTableRowElement>) => { };
+
+    const handleDragEnd = (e: DragEvent<HTMLTableRowElement>) => { };
+
+    const handleDragOver = (e: DragEvent<HTMLTableRowElement>) => {
+        e.preventDefault();
+    };
+
+    const handleDrop = (e: DragEvent<HTMLTableRowElement>, character: Character) => {
+        e.preventDefault();
+        if (draggableCharacter) {
+            charactersStore.swapCharacters(draggableCharacter, character);
+        }
     };
 
     return (
@@ -70,7 +93,13 @@ export const CharactersTable = ({ characters, isLoading, error, onAction, onSort
                         currentCharacters.map((character) => (
                             <tr
                                 key={character.name}
-                                className="border-b border-gray-700 bg-gray-800 hover:bg-gray-600"
+                                className="border-b border-gray-700 bg-gray-800 hover:bg-gray-600 cursor-grab"
+                                draggable={true}
+                                onDragStart={(e) => handleDragStart(e, character)}
+                                onDragLeave={() => { }}
+                                onDragEnd={() => { }}
+                                onDragOver={(e) => handleDragOver(e)}
+                                onDrop={(e) => handleDrop(e, character)}
                             >
                                 <th scope="row" className="px-5 py-4 font-medium text-white">
                                     {character.name}

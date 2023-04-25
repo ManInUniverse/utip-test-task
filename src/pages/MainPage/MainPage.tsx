@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 
-import { charactersStore } from '../../store/charactersStore';
+import { SortingConfig, charactersStore } from '../../store/charactersStore';
 import { AppRoute } from '../../const';
 import { Character } from '../../types/character';
 
@@ -17,8 +17,9 @@ export const MainPage = observer(() => {
     const navigate = useNavigate();
     const [targetCharacter, setTargetCharacter] = useState<Character | null>(null);
     const [modal, setModal] = useState<'removeData' | 'deleteCharacter' | null>(null);
+    const [sortingConfig, setSortingConfig] = useState<SortingConfig | null>(null);
 
-    const { sortedCharacters, isLoading, error } = charactersStore;
+    const { characters, isLoading, error } = charactersStore;
 
     const handleModalClose = () => {
         setTargetCharacter(null);
@@ -42,8 +43,18 @@ export const MainPage = observer(() => {
         handleModalClose();
     };
 
-    const handleSortingChange = (field: keyof Character) => {
-        charactersStore.setSortingConfig(field);
+    const handleSort = (field: keyof Character) => {
+        let direction: SortingConfig['direction'] = 'ascending';
+        if (
+            sortingConfig &&
+            sortingConfig.field === field &&
+            sortingConfig.direction === 'ascending'
+        ) {
+            direction = 'descending';
+        }
+        const newSortingConfig: SortingConfig = { field, direction };
+        setSortingConfig(newSortingConfig);
+        charactersStore.sort(newSortingConfig);
     };
 
     return (
@@ -71,11 +82,11 @@ export const MainPage = observer(() => {
             <div>
                 <div className="relative w-[650px] overflow-x-auto rounded-lg">
                     <CharactersTable
-                        characters={sortedCharacters}
+                        characters={characters}
                         isLoading={isLoading}
                         error={error}
                         onAction={handleActionButtonClick}
-                        onSort={handleSortingChange}
+                        onSort={handleSort}
                     />
                 </div>
                 <div className="mt-4 flex items-center justify-end gap-5">
@@ -86,7 +97,7 @@ export const MainPage = observer(() => {
                     >
                         Add new character
                     </Button>
-                    {!!sortedCharacters.length && (
+                    {!!characters.length && (
                         <Button type="button" color="red" onClick={() => setModal('removeData')}>
                             Remove data
                         </Button>

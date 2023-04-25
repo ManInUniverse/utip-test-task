@@ -13,20 +13,18 @@ class CharactersStore {
     characters: Character[] = [];
     isLoading = false;
     error: string | null = null;
-    sortingConfig: SortingConfig | null = null;
 
     constructor() {
         makeAutoObservable(this);
         makePersistable(this, {
             name: 'CharactersStore',
-            properties: ['characters', 'sortingConfig'],
+            properties: ['characters'],
             storage: window.localStorage,
         });
     }
 
     load() {
         this.clear();
-        this.sortingConfig = null;
         this.isLoading = true;
         this.error = null;
         fetchCharacters()
@@ -66,35 +64,22 @@ class CharactersStore {
         }
     }
 
-    setSortingConfig(field: keyof Character) {
-        const sortingConfig = this.sortingConfig;
-        let direction: SortingConfig['direction'] = 'ascending';
-
-        if (
-            sortingConfig &&
-            sortingConfig.field === field &&
-            sortingConfig.direction === 'ascending'
-        ) {
-            direction = 'descending';
-        }
-        this.sortingConfig = { field, direction };
+    sort(sortingConfig: SortingConfig) {
+        this.characters.sort((a, b) => {
+            if (a[sortingConfig.field] < b[sortingConfig.field]) {
+                return sortingConfig.direction === 'ascending' ? -1 : 1;
+            }
+            if (a[sortingConfig.field] > b[sortingConfig.field]) {
+                return sortingConfig.direction === 'ascending' ? 1 : -1;
+            }
+            return 0;
+        });
     }
 
-    get sortedCharacters() {
-        const sortingConfig = this.sortingConfig;
-
-        if (sortingConfig) {
-            return [...this.characters].sort((a, b) => {
-                if (a[sortingConfig.field] < b[sortingConfig.field]) {
-                    return sortingConfig.direction === 'ascending' ? -1 : 1;
-                }
-                if (a[sortingConfig.field] > b[sortingConfig.field]) {
-                    return sortingConfig.direction === 'ascending' ? 1 : -1;
-                }
-                return 0;
-            });
-        }
-        return this.characters;
+    swapCharacters(characterA: Character, characterB: Character) {
+        const indexA = this.characters.indexOf(characterA);
+        const indexB = this.characters.indexOf(characterB);
+        this.characters[indexA] = this.characters.splice(indexB, 1, this.characters[indexA])[0];
     }
 }
 
