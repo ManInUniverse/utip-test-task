@@ -1,13 +1,14 @@
-import { useEffect, useState, DragEvent } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Character } from '../../types/character';
 import { tableHeaders } from './CharactersTable.const';
+import { charactersStore } from '../../store/charactersStore';
 
 import { ReactComponent as SortingIcon } from '../../assets/sortingIcon.svg';
 
 import { Spinner } from '../Spinner/Spinner';
 import { Pagination } from '../Pagination/Pagination';
-import { charactersStore } from '../../store/charactersStore';
+import { CharacterRow } from '../CharacterRow/CharacterRow';
 
 type Props = {
     characters: Character[];
@@ -42,23 +43,9 @@ export const CharactersTable = ({ characters, isLoading, error, onAction, onSort
 
     const [draggableCharacter, setDraggableCharacter] = useState<Character | null>(null);
 
-    const handleDragStart = (e: DragEvent<HTMLTableRowElement>, character: Character) => {
-        e.dataTransfer.setData('text/plain', '');
-        setDraggableCharacter(character);
-    };
-
-    const handleDragLeave = (e: DragEvent<HTMLTableRowElement>) => { };
-
-    const handleDragEnd = (e: DragEvent<HTMLTableRowElement>) => { };
-
-    const handleDragOver = (e: DragEvent<HTMLTableRowElement>) => {
-        e.preventDefault();
-    };
-
-    const handleDrop = (e: DragEvent<HTMLTableRowElement>, character: Character) => {
-        e.preventDefault();
+    const handleDrop = (currentCharacter: Character) => {
         if (draggableCharacter) {
-            charactersStore.swapCharacters(draggableCharacter, character);
+            charactersStore.swapCharacters(draggableCharacter, currentCharacter);
         }
     };
 
@@ -88,36 +75,25 @@ export const CharactersTable = ({ characters, isLoading, error, onAction, onSort
                         </th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody
+                    onDragEnter={(e) => {
+                        e.preventDefault();
+                        e.dataTransfer.dropEffect = 'move';
+                    }}
+                    onDragOver={(e) => {
+                        e.preventDefault();
+                        e.dataTransfer.dropEffect = 'move';
+                    }}
+                >
                     {currentCharacters.length ? (
                         currentCharacters.map((character) => (
-                            <tr
+                            <CharacterRow
                                 key={character.name}
-                                className="border-b border-gray-700 bg-gray-800 hover:bg-gray-600 cursor-grab"
-                                draggable={true}
-                                onDragStart={(e) => handleDragStart(e, character)}
-                                onDragLeave={() => { }}
-                                onDragEnd={() => { }}
-                                onDragOver={(e) => handleDragOver(e)}
-                                onDrop={(e) => handleDrop(e, character)}
-                            >
-                                <th scope="row" className="px-5 py-4 font-medium text-white">
-                                    {character.name}
-                                </th>
-                                <td className="px-5 py-4">{character.height}</td>
-                                <td className="px-5 py-4">{character.mass}</td>
-                                <td className="px-5 py-4">{character.hairColor}</td>
-                                <td className="px-5 py-4">{character.gender}</td>
-                                <td className="px-5 py-4">
-                                    <button
-                                        className="text-red-600"
-                                        onClick={() => onAction(character)}
-                                        type="button"
-                                    >
-                                        Delete
-                                    </button>
-                                </td>
-                            </tr>
+                                character={character}
+                                onDragStart={setDraggableCharacter}
+                                onDrop={handleDrop}
+                                onAction={onAction}
+                            />
                         ))
                     ) : (
                         <tr className="bg-gray-800">

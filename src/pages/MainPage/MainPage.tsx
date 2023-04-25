@@ -58,9 +58,9 @@ export const MainPage = observer(() => {
     };
 
     return (
-        <section className="flex py-8">
+        <section className="flex mt-10">
             <h1 className="sr-only">Utip Test Task. Star Wars Characters</h1>
-            <div className="mr-auto flex flex-col items-center justify-self-center">
+            <div className="flex flex-col items-center mr-20">
                 <img src={logo} alt="Star Wars Logo" />
                 <p className="mt-10 w-[400px] text-center">
                     Greetings, young Padawan. To get information about characters from the Star Wars
@@ -80,7 +80,7 @@ export const MainPage = observer(() => {
                 </div>
             </div>
             <div>
-                <div className="relative w-[650px] overflow-x-auto rounded-lg">
+                <div className="w-[700px] rounded-lg overflow-x-auto">
                     <CharactersTable
                         characters={characters}
                         isLoading={isLoading}
